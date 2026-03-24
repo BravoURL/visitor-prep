@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 April — Visitor Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --sep: rgba(60,60,67,0.1);
+  --border: rgba(60,60,67,0.15);
+  --text: #000000;
+  --text2: #3c3c43;
+  --text3: rgba(60,60,67,0.55);
+  --text4: rgba(60,60,67,0.35);
+  --blue: #007aff;
+  --red: #ff3b30;
+  --orange: #ff9500;
+  --green: #34c759;
+  --purple: #af52de;
+  --radius: 12px;
+}
+body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:15px; padding-bottom:80px; }
+
+/* HEADER */
+.header { background:rgba(242,242,247,0.94); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); position:sticky; top:0; z-index:50; border-bottom:1px solid var(--sep); }
+.header-inner { padding:16px 20px 0; }
+.header-title { font-size:26px; font-weight:700; letter-spacing:-0.4px; }
+.header-sub { font-size:13px; color:var(--text3); margin-top:2px; margin-bottom:12px; }
+
+/* DASHBOARD CARDS */
+.dash-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.dash-card { background:var(--card); border-radius:10px; padding:10px 12px; text-align:center; }
+.dash-card-num { font-size:22px; font-weight:700; letter-spacing:-0.5px; line-height:1; }
+.dash-card-label { font-size:11px; color:var(--text3); margin-top:3px; font-weight:500; }
+.dash-card-num.blue { color:var(--blue); }
+.dash-card-num.red { color:var(--red); }
+.dash-card-num.purple { color:var(--purple); }
+.dash-card-num.teal { color:#0071e3; }
+.dash-card-num.green { color:var(--green); }
+.dash-card-num.orange { color:var(--orange); }
+
+/* PROGRESS BARS */
+.prog-block { margin-bottom:14px; display:flex; flex-direction:column; gap:7px; }
+.prog-row { display:flex; align-items:center; gap:8px; }
+.prog-label { font-size:12px; color:var(--text3); width:72px; flex-shrink:0; font-weight:500; }
+.prog-track { flex:1; height:4px; background:rgba(0,0,0,0.06); border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:2px; transition:width 0.4s; }
+.prog-pct { font-size:12px; font-weight:600; min-width:28px; text-align:right; }
+
+/* CHIPS */
+.chips { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:0 20px 14px; }
+.chips::-webkit-scrollbar { display:none; }
+.chip { flex-shrink:0; background:var(--card); border:1.5px solid transparent; border-radius:20px; padding:5px 13px; font-size:13px; font-weight:500; color:var(--text2); cursor:pointer; white-space:nowrap; transition:all 0.15s; }
+.chip.active { background:var(--blue); color:white; border-color:var(--blue); }
+.chip-num { font-weight:700; }
+
+/* TABS */
+.tabs { display:flex; gap:4px; padding:0 16px 12px; }
+.tab { flex:1; padding:8px 6px; border:none; background:var(--card); font-family:inherit; font-size:13px; font-weight:500; color:var(--text3); cursor:pointer; border-radius:10px; transition:all 0.15s; }
+.tab.active { background:var(--blue); color:white; font-weight:600; }
+
+/* MAIN */
+.main { padding:0 16px; }
+
+/* SECTION */
+.sec { margin-bottom:8px; }
+.sec-group { background:var(--card); border-radius:var(--radius); overflow:hidden; }
+
+/* AREA HEADER */
+.area-hdr { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; cursor:pointer; border-bottom:1px solid var(--sep); }
+.area-hdr:last-child { border-bottom:none; }
+.area-hdr-name { font-size:15px; font-weight:600; }
+.area-hdr-right { display:flex; align-items:center; gap:8px; color:var(--text3); font-size:13px; }
+.chevron { font-size:16px; color:var(--text4); font-weight:300; line-height:1; transition:transform 0.2s; display:inline-block; }
+.chevron.open { transform:rotate(90deg); }
+
+/* TASK ROW */
+.task-row { display:flex; align-items:flex-start; gap:12px; padding:11px 16px 11px 50px; border-bottom:1px solid var(--sep); position:relative; }
+.task-row:last-child { border-bottom:none; }
+.task-row.done { opacity:0.55; }
+
+.chk { position:absolute; left:16px; top:12px; width:22px; height:22px; border-radius:50%; border:2px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
+.chk.on { background:var(--green); border-color:var(--green); }
+.chk.on::after { content:''; width:5px; height:9px; border:2px solid white; border-top:none; border-left:none; transform:rotate(45deg) translateY(-1px); display:block; }
+
+.task-body { flex:1; min-width:0; }
+.task-name { font-size:15px; font-weight:400; line-height:1.35; margin-bottom:4px; }
+.done .task-name { text-decoration:line-through; color:var(--text3); }
+.task-meta { display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+
+.tag { font-size:11px; font-weight:600; padding:2px 7px; border-radius:5px; }
+.tag.must { background:#fff0ee; color:var(--red); }
+.tag.should { background:#fff6e6; color:var(--orange); }
+.tag.nice { background:#edfbef; color:var(--green); }
+.tag.bj { background:#f5edfc; color:var(--purple); }
+.tag.bw { background:#eaf6ff; color:#0071e3; }
+.tag.both { background:#f0f0f0; color:#555; }
+.tag.trade { background:#f0f0f0; color:#555; }
+.tag.donedate { background:none; color:var(--green); font-size:11px; font-weight:500; padding:0; }
+.tag.datedue { background:none; color:var(--text3); font-size:11px; font-weight:400; padding:0; }
+
+.task-note { font-size:12px; color:var(--text3); margin-top:3px; line-height:1.4; }
+.edit-btn { width:30px; height:30px; border:none; background:transparent; color:var(--text4); cursor:pointer; font-size:20px; font-weight:300; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-radius:6px; margin-top:-2px; line-height:1; }
+.edit-btn:active { color:var(--blue); }
+
+/* ADD ROW */
+.add-row { padding:10px 4px 4px; display:flex; justify-content:flex-end; }
+.add-btn { background:var(--blue); color:white; border:none; border-radius:20px; padding:8px 18px; font-size:14px; font-weight:600; font-family:inherit; cursor:pointer; }
+
+/* MODAL */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:200; align-items:flex-end; justify-content:center; }
+.overlay.open { display:flex; }
+.modal { background:var(--card); border-radius:20px 20px 0 0; width:100%; max-width:560px; max-height:92vh; overflow-y:auto; animation:up 0.22s ease; padding-bottom:20px; }
+@keyframes up { from{transform:translateY(100%);opacity:0} }
+.modal-handle { width:36px; height:4px; background:var(--sep); border-radius:2px; margin:10px auto 0; }
+.modal-t { font-size:17px; font-weight:700; text-align:center; padding:16px 20px 12px; }
+.modal-body { padding:0 16px; }
+
+.fg { background:var(--bg); border-radius:var(--radius); overflow:hidden; margin-bottom:14px; }
+.frow { display:flex; align-items:center; padding:11px 14px; border-bottom:1px solid var(--sep); gap:12px; }
+.frow:last-child { border-bottom:none; }
+.flabel { font-size:15px; color:var(--text); width:90px; flex-shrink:0; }
+.finput,.fselect { flex:1; border:none; background:transparent; font-family:inherit; font-size:15px; color:var(--text); outline:none; text-align:right; -webkit-appearance:none; }
+.ftextarea { width:100%; border:none; background:transparent; font-family:inherit; font-size:15px; color:var(--text); outline:none; resize:none; min-height:65px; padding:11px 14px; }
+.finput::placeholder { color:var(--text4); text-align:left; }
+
+.modal-actions { padding:6px 16px 0; display:flex; flex-direction:column; gap:8px; }
+.btn-save { padding:14px; background:var(--blue); color:white; border:none; border-radius:var(--radius); font-size:16px; font-weight:600; font-family:inherit; cursor:pointer; }
+.btn-del { padding:14px; background:#fff0ee; color:var(--red); border:none; border-radius:var(--radius); font-size:16px; font-weight:500; font-family:inherit; cursor:pointer; }
+.btn-cancel { padding:14px; background:var(--bg); color:var(--blue); border:none; border-radius:var(--radius); font-size:16px; font-weight:500; font-family:inherit; cursor:pointer; }
+.hidden { display:none !important; }
+.page { display:none; } .page.active { display:block; }
+.empty { text-align:center; padding:50px 20px; color:var(--text3); font-size:15px; }
+.sec-label { font-size:12px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; padding:14px 4px 6px; }
+.sort-btn { width:36px; height:36px; border:none; background:var(--card); border-radius:10px; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.sort-btn.active { background:var(--blue); }
+
+@media(min-width:560px){.modal{border-radius:20px;margin-bottom:40px;}.overlay{align-items:center;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-title">4 April — Visitor Prep</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="header-sub" id="headerSub">Loading…</div><div id="syncStatus" style="font-size:11px;color:var(--text3);font-weight:500;padding-bottom:12px"></div></div>
+
+    <!-- Dashboard cards -->
+    <div class="dash-cards">
+      <div class="dash-card"><div class="dash-card-num blue" id="dc-total">—</div><div class="dash-card-label">Total</div></div>
+      <div class="dash-card"><div class="dash-card-num red" id="dc-must">—</div><div class="dash-card-label">Must Do</div></div>
+      <div class="dash-card"><div class="dash-card-num green" id="dc-done">—</div><div class="dash-card-label">Done</div></div>
+      <div class="dash-card"><div class="dash-card-num purple" id="dc-bj-rem">—</div><div class="dash-card-label">BJ Remaining</div></div>
+      <div class="dash-card"><div class="dash-card-num teal" id="dc-bw-rem">—</div><div class="dash-card-label">BW Remaining</div></div>
+      <div class="dash-card"><div class="dash-card-num orange" id="dc-due-today">—</div><div class="dash-card-label">Due Today</div></div>
+    </div>
+
+    <!-- Progress bars -->
+    <div class="prog-block">
+      <div class="prog-row">
+        <div class="prog-label">Overall</div>
+        <div class="prog-track"><div class="prog-fill" id="pFill-overall" style="width:0%;background:var(--blue)"></div></div>
+        <div class="prog-pct" id="pPct-overall" style="color:var(--blue)">0%</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Indoor</div>
+        <div class="prog-track"><div class="prog-fill" id="pFill-indoor" style="width:0%;background:var(--purple)"></div></div>
+        <div class="prog-pct" id="pPct-indoor" style="color:var(--purple)">0%</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Outdoor</div>
+        <div class="prog-track"><div class="prog-fill" id="pFill-outdoor" style="width:0%;background:var(--green)"></div></div>
+        <div class="prog-pct" id="pPct-outdoor" style="color:var(--green)">0%</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">💜 BJ</div>
+        <div class="prog-track"><div class="prog-fill" id="pFill-bj" style="width:0%;background:var(--purple)"></div></div>
+        <div class="prog-pct" id="pPct-bj" style="color:var(--purple)">0%</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">💙 BW</div>
+        <div class="prog-track"><div class="prog-fill" id="pFill-bw" style="width:0%;background:#0071e3"></div></div>
+        <div class="prog-pct" id="pPct-bw" style="color:#0071e3">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter chips -->
+  <div class="chips">
+    <div class="chip active" onclick="setFilter('all')" id="chip-all">All <span class="chip-num" id="cn-all">—</span></div>
+    <div class="chip" onclick="setFilter('must')" id="chip-must">🔴 Must <span class="chip-num" id="cn-must">—</span></div>
+    <div class="chip" onclick="setFilter('BJ')" id="chip-BJ">💜 BJ <span class="chip-num" id="cn-BJ">—</span></div>
+    <div class="chip" onclick="setFilter('BW')" id="chip-BW">💙 BW <span class="chip-num" id="cn-BW">—</span></div>
+    <div class="chip" onclick="setFilter('due-today')" id="chip-due-today">📅 Due Today <span class="chip-num" id="cn-due-today">—</span></div>
+    <div class="chip" onclick="setFilter('done')" id="chip-done">✓ Done <span class="chip-num" id="cn-done">—</span></div>
+  </div>
+
+  <!-- Sort + Tabs row -->
+  <div style="display:flex;gap:4px;padding:0 16px 12px;align-items:center;">
+    <div class="tabs" style="flex:1;padding:0;margin:0;">
+      <button class="tab active" onclick="switchTab('indoor')" id="tab-indoor">🏠 Indoor</button>
+      <button class="tab" onclick="switchTab('outdoor')" id="tab-outdoor">🌿 Outdoor</button>
+      <button class="tab" onclick="switchTab('meal')" id="tab-meal">🍽️ Dinner</button>
+    </div>
+    <button class="sort-btn" id="sortBtn" onclick="toggleSort()" title="Sort by due date">📅</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page" id="page-all"></div>
+  <div class="page active" id="page-indoor"></div>
+  <div class="page" id="page-outdoor"></div>
+  <div class="page" id="page-meal"></div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-t" id="modalT">Task</div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="frow"><div class="flabel">Task</div><input class="finput" id="fName" placeholder="What needs doing?" style="text-align:left"></div>
+        <div class="frow"><div class="flabel">Area</div><select class="fselect" id="fArea"></select></div>
+        <div class="frow"><div class="flabel">Section</div><select class="fselect" id="fSection"><option value="Indoor">Indoor</option><option value="Outdoor">Outdoor</option><option value="Meal Prep">Meal Prep</option></select></div>
+      </div>
+      <div class="fg">
+        <div class="frow"><div class="flabel">Priority</div><select class="fselect" id="fPriority"><option value="MUST">Must Do</option><option value="SHOULD">Should Do</option><option value="NICE">Nice to Have</option></select></div>
+        <div class="frow"><div class="flabel">Assigned</div><select class="fselect" id="fWho"><option value="BJ">Bernadette</option><option value="BW">Brent</option><option value="Both">Both</option><option value="Painter">Painter</option><option value="Landscaper">Landscaper</option></select></div>
+        <div class="frow"><div class="flabel">Due date</div><input type="date" class="finput" id="fDue" min="2026-03-21" max="2026-04-05"></div>
+      </div>
+      <div class="fg">
+        <textarea class="ftextarea" id="fNotes" placeholder="Notes…"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveTask()">Save</button>
+      <button class="btn-del hidden" id="btnDel" onclick="deleteTask()">Delete Task</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFAULT_DUE = '2026-04-04';
+
+const SEED = [
+  {id:1,s:'Indoor',a:'Study',n:'Order & install ceiling pendant',p:'SHOULD',w:'BW',notes:'Order ASAP if not in hand'},
+  {id:2,s:'Indoor',a:'Study',n:'Clean air conditioner vent',p:'SHOULD',w:'Both',notes:''},
+  {id:3,s:'Indoor',a:'Study',n:'Arrange globe for lamp',p:'SHOULD',w:'BJ',notes:'Check bulb fitting first'},
+  {id:4,s:'Indoor',a:'Study',n:'Clean out printer cupboard and sort cords',p:'SHOULD',w:'Both',notes:''},
+  {id:5,s:'Indoor',a:'Study',n:'Clean out baskets (toys, IT equipment, misc)',p:'SHOULD',w:'BJ',notes:''},
+  {id:6,s:'Indoor',a:'Laundry',n:'Buy silicone & seal leaking pipes under sink',p:'MUST',w:'Both',notes:'Functional — do first'},
+  {id:7,s:'Indoor',a:'Laundry',n:'Finish cleaning the floor',p:'SHOULD',w:'BJ',notes:''},
+  {id:8,s:'Indoor',a:'Laundry',n:'Replace broken downlight with 2 new smart downlights',p:'SHOULD',w:'BW',notes:'Check fitting type before buying'},
+  {id:9,s:'Indoor',a:'Laundry',n:'Clean ceiling cobwebs',p:'SHOULD',w:'BJ',notes:''},
+  {id:10,s:'Indoor',a:'Laundry',n:'Put cap on exposed power point',p:'MUST',w:'BW',notes:'Safety item'},
+  {id:11,s:'Indoor',a:'Laundry',n:'Update baskets on top of cupboards',p:'NICE',w:'BJ',notes:''},
+  {id:12,s:'Indoor',a:'Powder Room',n:'Patch & paint light switch on outside of bathroom',p:'SHOULD',w:'Both',notes:'Book painter Week 1'},
+  {id:13,s:'Indoor',a:'Powder Room',n:'Reverse tongue of mortice lock on bathroom door',p:'MUST',w:'BW',notes:'Functional fix'},
+  {id:14,s:'Indoor',a:'Powder Room',n:'Replace silver hook with satin brass hook(s) on back of door',p:'SHOULD',w:'BW',notes:'Buy 1–2 satin brass hooks'},
+  {id:15,s:'Indoor',a:'Powder Room',n:'Patch & paint wall where old hook was removed',p:'SHOULD',w:'Painter',notes:'Combine with painter visit'},
+  {id:16,s:'Indoor',a:'Family & Living Room',n:'Clean and polish chandeliers',p:'MUST',w:'BJ',notes:''},
+  {id:17,s:'Indoor',a:'Family & Living Room',n:'Install clock on wall',p:'SHOULD',w:'BW',notes:''},
+  {id:18,s:'Indoor',a:'Family & Living Room',n:'Tidy and clean out bar area',p:'MUST',w:'Both',notes:''},
+  {id:19,s:'Indoor',a:'Family & Living Room',n:'Tighten loose door handle',p:'MUST',w:'BW',notes:''},
+  {id:20,s:'Indoor',a:'Family & Living Room',n:'Fix downlights to matching colour temperature',p:'SHOULD',w:'BW',notes:'Check if replaceable globes or full fitting'},
+  {id:21,s:'Indoor',a:'Family & Living Room',n:'Patch & paint power point behind gas fireplace',p:'SHOULD',w:'BJ',notes:''},
+  {id:22,s:'Indoor',a:'Family & Living Room',n:'Patch & paint wall behind gas fireplace',p:'SHOULD',w:'Painter',notes:''},
+  {id:23,s:'Indoor',a:'Family & Living Room',n:'Clean scuff marks from dining chairs',p:'MUST',w:'BJ',notes:''},
+  {id:24,s:'Indoor',a:'Family & Living Room',n:'Restore/refinish dining table surface',p:'SHOULD',w:'BJ',notes:'e.g. Howard Restore-A-Finish'},
+  {id:25,s:'Indoor',a:'Hallway & Entry',n:'Source and place large plant for left corner of hallway',p:'SHOULD',w:'BJ',notes:''},
+  {id:26,s:'Indoor',a:'Hallway & Entry',n:'Get proper glass globes for hallway pendant',p:'SHOULD',w:'BW',notes:'Check fitting size'},
+  {id:27,s:'Indoor',a:'Hallway & Entry',n:'Arrange removal of dead rat from roof/wall cavity',p:'MUST',w:'BW',notes:'Call pest control — urgent'},
+  {id:28,s:'Indoor',a:'Hallway & Entry',n:'Patch cracked roof tile to prevent water leak',p:'MUST',w:'BW',notes:'Do before next rain'},
+  {id:29,s:'Indoor',a:'Hallway & Entry',n:'Install hardware on front door and make good',p:'MUST',w:'BW',notes:''},
+  {id:30,s:'Indoor',a:'General — Whole House',n:'Get carpet mats made for all areas',p:'SHOULD',w:'BJ',notes:'Order early — may have lead time'},
+  {id:31,s:'Indoor',a:'General — Whole House',n:'Get rear-of-house air conditioner working',p:'MUST',w:'BW',notes:'Call HVAC — book urgently'},
+  {id:32,s:'Indoor',a:'General — Whole House',n:'Get bedroom wing air conditioner fixed',p:'MUST',w:'BW',notes:'Same trade visit if possible'},
+  {id:33,s:'Indoor',a:'General — Whole House',n:'Repair floor throughout (especially piano & bar areas)',p:'SHOULD',w:'BJ',notes:'Use floor touch-up product'},
+  {id:34,s:'Indoor',a:'General — Whole House',n:'Touch up floor where paint/scratches visible',p:'SHOULD',w:'BJ',notes:''},
+  {id:35,s:'Indoor',a:'General — Whole House',n:'Update door hardware to satin brass throughout',p:'SHOULD',w:'BW',notes:'Buy in bulk — check quantities'},
+  {id:36,s:'Indoor',a:"Girls' Room",n:'Spot clean rug',p:'SHOULD',w:'BJ',notes:''},
+  {id:37,s:'Indoor',a:"Girls' Room",n:'Fix hinge on fridge door',p:'MUST',w:'BW',notes:''},
+  {id:38,s:'Indoor',a:"Girls' Room",n:'Edge MDF/melamine cabinet tops at window box',p:'SHOULD',w:'BW',notes:'Iron-on or glue edge tape'},
+  {id:39,s:'Indoor',a:"Girls' Room",n:'Fix broken window',p:'MUST',w:'BW',notes:'Safety issue — prioritise'},
+  {id:40,s:'Indoor',a:"Girls' Room",n:'Hang pictures',p:'SHOULD',w:'BW',notes:''},
+  {id:41,s:'Indoor',a:"Girls' Room",n:'Install wardrobe fittings',p:'SHOULD',w:'BW',notes:''},
+  {id:42,s:'Indoor',a:'Lounge Room',n:'Get made and install covers for planter boxes',p:'SHOULD',w:'BW',notes:'May need lead time — order early'},
+  {id:43,s:'Indoor',a:'Lounge Room',n:'Replace all 10 x E14 pendant globes',p:'SHOULD',w:'BW',notes:'Same colour temp'},
+  {id:44,s:'Indoor',a:'Lounge Room',n:'Store/hang guitar',p:'NICE',w:'BW',notes:''},
+  {id:45,s:'Indoor',a:'Lounge Room',n:'Change rebate kit to satin brass',p:'SHOULD',w:'BW',notes:''},
+  {id:46,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Install 4 hooks between door and mirror',p:'SHOULD',w:'BW',notes:'Satin brass'},
+  {id:47,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Neaten/replace bedside power charging stations',p:'SHOULD',w:'BW',notes:''},
+  {id:48,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Replace power point with new iconic style',p:'NICE',w:'BW',notes:''},
+  {id:49,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Install toilet roll holder in master ensuite',p:'MUST',w:'BW',notes:''},
+  {id:50,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Touch up scuff on drawer',p:'NICE',w:'BJ',notes:''},
+  {id:51,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Replace shower handheld holder (ABI Interiors)',p:'SHOULD',w:'Both',notes:'Order online — check delivery time'},
+  {id:52,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Straighten wall lamps',p:'SHOULD',w:'Both',notes:''},
+  {id:53,s:'Indoor',a:'Master Bedroom & Ensuite',n:'Clean exhaust fan',p:'SHOULD',w:'BJ',notes:''},
+  {id:54,s:'Indoor',a:'Bedroom Wing Passage',n:'Change storage cupboard hinges to satin brass',p:'SHOULD',w:'BW',notes:''},
+  {id:55,s:'Indoor',a:'Bedroom Wing Passage',n:'Painters: touch up architraves & skirting near guest room',p:'SHOULD',w:'Painter',notes:'Book with painter'},
+  {id:56,s:'Indoor',a:'Main Bathroom',n:'Silicone back of bath',p:'MUST',w:'BJ',notes:''},
+  {id:57,s:'Indoor',a:'Main Bathroom',n:'Clean exhaust fan',p:'SHOULD',w:'BJ',notes:''},
+  {id:58,s:'Indoor',a:'Guest Ensuite & Bedroom',n:'Install toilet roll holder in guest ensuite',p:'MUST',w:'BW',notes:''},
+  {id:59,s:'Indoor',a:'Guest Ensuite & Bedroom',n:'Sell baby capsule (Gumtree etc.)',p:'NICE',w:'BJ',notes:'List online asap'},
+  {id:60,s:'Indoor',a:'Guest Ensuite & Bedroom',n:'Clean out guest bedroom cupboard',p:'MUST',w:'BJ',notes:''},
+  {id:61,s:'Indoor',a:'Guest Ensuite & Bedroom',n:'Purchase and set out guest amenities',p:'MUST',w:'BJ',notes:'Toiletries, towels, etc.'},
+  {id:62,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Get rug for kitchen porch',p:'SHOULD',w:'BJ',notes:''},
+  {id:63,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Full clean of BBQ/barbecue',p:'MUST',w:'Both',notes:''},
+  {id:64,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Clean Weber',p:'SHOULD',w:'Both',notes:''},
+  {id:65,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Full organisation of tool shed',p:'SHOULD',w:'BW',notes:''},
+  {id:66,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Painter: touch up roof area',p:'SHOULD',w:'Painter',notes:''},
+  {id:67,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Painter: finish around locks on tool shed door',p:'SHOULD',w:'Painter',notes:''},
+  {id:68,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Painter: fix wall vent between garage door and kitchen door',p:'SHOULD',w:'Painter',notes:''},
+  {id:69,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Full garage clean and organise (cars only)',p:'MUST',w:'Both',notes:''},
+  {id:70,s:'Indoor',a:'Kitchen, Porch & Garage',n:'Clean out chest freezer',p:'MUST',w:'BJ',notes:''},
+  {id:71,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Tidy, neaten and organise entire area',p:'SHOULD',w:'BW',notes:''},
+  {id:72,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Rake out dirt area',p:'SHOULD',w:'BW',notes:''},
+  {id:73,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Remove star pickets and return wire roll to Leon',p:'SHOULD',w:'BW',notes:''},
+  {id:74,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Sell mini ride-on mower (Gumtree)',p:'NICE',w:'BW',notes:'List online early'},
+  {id:75,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Pack lawnmower into garage',p:'SHOULD',w:'BW',notes:''},
+  {id:76,s:'Outdoor',a:'Side Gate & Chook Pen',n:'Tidy up bike shed',p:'SHOULD',w:'BW',notes:''},
+  {id:77,s:'Outdoor',a:'Play & Trampoline',n:'Fix trampoline',p:'MUST',w:'BW',notes:'Safety issue'},
+  {id:78,s:'Outdoor',a:'Play & Trampoline',n:'Fix external cable for backyard lighting',p:'MUST',w:'BW',notes:''},
+  {id:79,s:'Outdoor',a:'Play & Trampoline',n:'Clean up playground area',p:'SHOULD',w:'Both',notes:''},
+  {id:80,s:'Outdoor',a:'Play & Trampoline',n:'Address/remove dying liriope',p:'SHOULD',w:'BW',notes:''},
+  {id:81,s:'Outdoor',a:'Play & Trampoline',n:'Full rake-out of garden beds',p:'SHOULD',w:'BW',notes:''},
+  {id:82,s:'Outdoor',a:'Play & Trampoline',n:'Apply fresh mulch to garden beds',p:'SHOULD',w:'BW',notes:'Buy in bulk — order early'},
+  {id:83,s:'Outdoor',a:'Play & Trampoline',n:'Trim rose bushes near playground',p:'SHOULD',w:'BJ',notes:''},
+  {id:84,s:'Outdoor',a:'Play & Trampoline',n:'Rake, neaten and mulch bed with hibiscus and viburnum',p:'SHOULD',w:'BW',notes:''},
+  {id:85,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Remove dead passionfruit vine',p:'SHOULD',w:'BW',notes:''},
+  {id:86,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Plant star jasmine in its place',p:'SHOULD',w:'BW',notes:'Buy plant Week 1'},
+  {id:87,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Shape topiary balls into clouds (light shaping only)',p:'SHOULD',w:'BJ',notes:''},
+  {id:88,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Lightly shape little rubies (do not hack)',p:'SHOULD',w:'BJ',notes:''},
+  {id:89,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Pull out all passionfruit vine sprouts',p:'SHOULD',w:'Both',notes:''},
+  {id:90,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Full weeding of back garden beds',p:'MUST',w:'Both',notes:''},
+  {id:91,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Trim mock orange neatly',p:'SHOULD',w:'Landscaper',notes:''},
+  {id:92,s:'Outdoor',a:'Back Corner & Garden Beds',n:'Roller mow back lawn to flatten it out',p:'SHOULD',w:'Landscaper',notes:''},
+  {id:93,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Plant star jasmine at base of grape pillars',p:'SHOULD',w:'BW',notes:''},
+  {id:94,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Remove dead climbers from pillars',p:'SHOULD',w:'BW',notes:''},
+  {id:95,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Tidy garden beds around outdoor fireplace',p:'SHOULD',w:'Both',notes:''},
+  {id:96,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Paint outdoor fireplace with exterior house paint',p:'SHOULD',w:'Both',notes:'Confirm correct paint type'},
+  {id:97,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Paint brickwork from trampoline to Kyle Place gate',p:'SHOULD',w:'Both',notes:''},
+  {id:98,s:'Outdoor',a:'Grape Pillars & Fireplace',n:'Control snake vine — light trim',p:'SHOULD',w:'BW',notes:'I like the ramble :)'},
+  {id:99,s:'Outdoor',a:'Courtyard',n:'Finish planting all courtyard plants',p:'MUST',w:'Both',notes:''},
+  {id:100,s:'Outdoor',a:'Courtyard',n:'Finish retic installation and get it working',p:'MUST',w:'BW',notes:'May need plumber/irrigator'},
+  {id:101,s:'Outdoor',a:'Courtyard',n:'Full mulch of courtyard beds',p:'SHOULD',w:'BW',notes:''},
+  {id:102,s:'Outdoor',a:'Courtyard',n:'Purchase and plant Boston ivy on three walls',p:'SHOULD',w:'Both',notes:'Buy plants Week 1'},
+  {id:103,s:'Outdoor',a:'Courtyard',n:"Lightly trim bougainvillea near Vaughan's bedroom window",p:'SHOULD',w:'BW',notes:''},
+  {id:104,s:'Outdoor',a:'Courtyard',n:'Spray all weeds on property',p:'MUST',w:'BW',notes:'Do early — needs time to work'},
+  {id:105,s:'Outdoor',a:'Courtyard',n:'Big trim of vegetation above hydrangea near Kyle Place gate',p:'SHOULD',w:'BW',notes:''},
+  {id:106,s:'Outdoor',a:'Courtyard',n:'Water blast all brickwork in backyard',p:'SHOULD',w:'BW',notes:'Hire machine if needed'},
+  {id:107,s:'Outdoor',a:'Retic & Sand Area',n:'Get retic working near back air conditioner',p:'MUST',w:'BW',notes:''},
+  {id:108,s:'Outdoor',a:'Retic & Sand Area',n:'Clean up sand — level and make good',p:'SHOULD',w:'BW',notes:''},
+  {id:109,s:'Outdoor',a:'Driveways & Porches',n:'Water blast Kyle Place driveway (lightly)',p:'SHOULD',w:'BW',notes:''},
+  {id:110,s:'Outdoor',a:'Driveways & Porches',n:'Water blast paving in front areas',p:'SHOULD',w:'BW',notes:''},
+  {id:111,s:'Outdoor',a:'Driveways & Porches',n:'Mop all porches thoroughly',p:'MUST',w:'Both',notes:'Do on 4 April'},
+  {id:112,s:'Outdoor',a:'Driveways & Porches',n:'Move pots from lounge room to front door; water regularly',p:'SHOULD',w:'Both',notes:''},
+  {id:113,s:'Outdoor',a:'Driveways & Porches',n:'Move existing ficus plants to lounge room',p:'SHOULD',w:'Both',notes:''},
+  {id:114,s:'Outdoor',a:'Driveways & Porches',n:'Paint pots white (same colour as house)',p:'SHOULD',w:'Both',notes:'Use exterior paint'},
+  {id:115,s:'Outdoor',a:'Driveways & Porches',n:'Paint letterbox',p:'SHOULD',w:'Both',notes:''},
+  {id:116,s:'Outdoor',a:'Driveways & Porches',n:'New front doormat',p:'MUST',w:'BJ',notes:''},
+  {id:117,s:'Outdoor',a:'Wilderness & Norfolk Pine',n:'Rake out all debris (especially acidic Norfolk pine needles)',p:'SHOULD',w:'BW',notes:'Do before mulching'},
+  {id:118,s:'Outdoor',a:'Wilderness & Norfolk Pine',n:'Trim ground cover where it strangles rosemary',p:'SHOULD',w:'BW',notes:''},
+  {id:119,s:'Outdoor',a:'Wilderness & Norfolk Pine',n:'Trim vegetation as needed',p:'SHOULD',w:'BW',notes:''},
+  {id:120,s:'Outdoor',a:'Wilderness & Norfolk Pine',n:'Proper edge, then mulch',p:'SHOULD',w:'BW',notes:''},
+  {id:121,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:"Execute Sharon's plan around lemon tree where possible",p:'SHOULD',w:'BJ',notes:'Get plan from Sharon first'},
+  {id:122,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:"Remove stray rocks near girls' bedroom; plant simple garden + mulch",p:'SHOULD',w:'Both',notes:''},
+  {id:123,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:"Fix brickwork near girls' bedroom",p:'SHOULD',w:'BW',notes:''},
+  {id:124,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Top dress and fertilise lawns',p:'SHOULD',w:'BW',notes:''},
+  {id:125,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Aerate and apply top dressing to bare lawn patches',p:'SHOULD',w:'BW',notes:''},
+  {id:126,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Apply fertiliser to all lawns',p:'SHOULD',w:'BW',notes:''},
+  {id:127,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Remove figs and weed/mulch garden bed of cosmic whites',p:'SHOULD',w:'BW',notes:''},
+  {id:128,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Trim and train creeping fig',p:'SHOULD',w:'BJ',notes:''},
+  {id:129,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Neaten bougainvillea near front door (lightly — leave top purple)',p:'SHOULD',w:'Both',notes:''},
+  {id:130,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Weed cooch grass from base of claridash in front lawn',p:'SHOULD',w:'BW',notes:''},
+  {id:131,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Trim growth from tree near letterbox',p:'SHOULD',w:'BW',notes:''},
+  {id:132,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Look at fixing brickwork, rake out and mulch beside wandoo driveway',p:'NICE',w:'BW',notes:''},
+  {id:133,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Water bougainvillea in pot regularly (ongoing)',p:'MUST',w:'Both',notes:"Ongoing — don't forget"},
+  {id:134,s:'Outdoor',a:"Front Garden & Girls' Exterior",n:'Mulch throughout all garden areas',p:'SHOULD',w:'Both',notes:'Buy in bulk'},
+  {id:135,s:'Meal Prep',a:'Dinner Prep',n:'Create menu',p:'MUST',w:'BJ',notes:''},
+  {id:136,s:'Meal Prep',a:'Dinner Prep',n:'Pre-cooking: tarts, dessert, potatoes',p:'MUST',w:'BJ',notes:'Do ahead of time'},
+  {id:137,s:'Meal Prep',a:'Dinner Prep',n:'Clean walls & skirtings in kitchen/dining',p:'SHOULD',w:'BJ',notes:''},
+  {id:138,s:'Meal Prep',a:'Dinner Prep',n:'Clean oven and rangehood',p:'MUST',w:'BJ',notes:''},
+  {id:139,s:'Meal Prep',a:'Dinner Prep',n:'Clean out fridge',p:'MUST',w:'BJ',notes:''},
+  {id:140,s:'Meal Prep',a:'Dinner Prep',n:'Grocery shopping',p:'MUST',w:'BJ',notes:''},
+  {id:141,s:'Meal Prep',a:'Dinner Prep',n:'Clean laundry and kitchen',p:'SHOULD',w:'BJ',notes:''},
+  {id:142,s:'Meal Prep',a:'Dinner Prep',n:'Clean bathrooms',p:'MUST',w:'BJ',notes:''},
+  {id:143,s:'Meal Prep',a:'Dinner Prep',n:'Thorough dust throughout',p:'MUST',w:'BJ',notes:''},
+  {id:144,s:'Meal Prep',a:'Dinner Prep',n:'Vacuum and mop',p:'MUST',w:'BJ',notes:''},
+  {id:145,s:'Meal Prep',a:'Dinner Prep',n:'Wipe out cutlery drawers, under-sink, bins',p:'SHOULD',w:'BJ',notes:''},
+  {id:146,s:'Meal Prep',a:'Dinner Prep',n:'Clean couches',p:'SHOULD',w:'BJ',notes:''},
+  {id:147,s:'Meal Prep',a:'Dinner Prep',n:'Clean up toy cupboards',p:'SHOULD',w:'BJ',notes:''},
+  {id:148,s:'Meal Prep',a:'Dinner Prep',n:'Set table',p:'MUST',w:'BJ',notes:'Do day of dinner'},
+  {id:149,s:'Meal Prep',a:'Dinner Prep',n:'Deepfryer setup',p:'SHOULD',w:'BJ',notes:''},
+  {id:150,s:'Meal Prep',a:'Dinner Prep',n:'Flowers / floral arrangement',p:'SHOULD',w:'BJ',notes:''},
+  {id:151,s:'Meal Prep',a:'Dinner Prep',n:'Food prep (day of)',p:'MUST',w:'BJ',notes:''},
+  {id:152,s:'Meal Prep',a:'Dinner Prep',n:'Prep Weber for cooking',p:'SHOULD',w:'BW',notes:''},
+  {id:153,s:'Meal Prep',a:'Dinner Prep',n:'Full blow outdoors and tidy (mow, whippersnip, edge, blow)',p:'MUST',w:'BW',notes:'Do on 4 Apr'},
+  {id:154,s:'Meal Prep',a:'Dinner Prep',n:'Clean outdoor table and chairs',p:'MUST',w:'BJ',notes:''},
+];
+
+const BIN_ID = '69c2043bc3097a1dd5537c99';
+const API_KEY = '$2a$10$JPO7sPp4QRl9L3Xrm.I99.ib6.ASAF2eibd0u5PTISLetBL3ybnNi';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+let tasks=[], nextId=300, filter='all', tab='indoor', editId=null, col={}, sortByDue=false;
+let syncTimer=null, syncing=false, lastVersion=null;
+
+function showSyncStatus(msg, colour) {
+  let el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = colour||'var(--text3)';
+}
+
+async function load() {
+  showSyncStatus('Loading…');
+  try {
+    const r = await fetch(BIN_URL+'/latest', {
+      headers: { 'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!r.ok) throw new Error('fetch failed');
+    const d = await r.json();
+    if (d && d.t && d.t.length) {
+      tasks = d.t; nextId = d.id||300; col = d.c||{};
+      showSyncStatus('Synced ✓', 'var(--green)');
+    } else {
+      init();
+      await pushToCloud();
+    }
+  } catch(e) {
+    // Fallback to localStorage
+    const saved = localStorage.getItem('vp6');
+    if (saved) { try { const o=JSON.parse(saved); tasks=o.t; nextId=o.id||300; col=o.c||{}; } catch(e2){init();} }
+    else init();
+    showSyncStatus('Offline', 'var(--orange)');
+  }
+}
+
+function init() {
+  tasks = SEED.map(t=>({...t, done:false, doneDate:null, due:DEFAULT_DUE, note:''}));
+}
+
+async function pushToCloud() {
+  if (syncing) return;
+  syncing = true;
+  showSyncStatus('Saving…');
+  const payload = { t:tasks, id:nextId, c:col };
+  localStorage.setItem('vp6', JSON.stringify(payload));
+  try {
+    const r = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key': API_KEY },
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error('put failed');
+    showSyncStatus('Saved ✓', 'var(--green)');
+    setTimeout(()=>showSyncStatus('', ''), 2000);
+  } catch(e) {
+    showSyncStatus('Saved locally', 'var(--orange)');
+  }
+  syncing = false;
+}
+
+function persist() {
+  // Debounce — wait 800ms after last change before pushing
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushToCloud, 800);
+}
+
+// Poll for remote changes every 15 seconds (so BJ sees BW's ticks)
+setInterval(async () => {
+  if (syncing) return;
+  try {
+    const r = await fetch(BIN_URL+'/latest', {
+      headers: { 'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d && d.t) {
+      tasks = d.t; nextId = d.id||300; col = d.c||{};
+      renderAll();
+      showSyncStatus('', '');
+    }
+  } catch(e) {}
+}, 15000);
+
+function fmtD(str) {
+  if(!str) return '';
+  return new Date(str+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+}
+function fmtDone(str) {
+  if(!str) return '';
+  return new Date(str).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+}
+function whoTag(w) {
+  if(w==='BJ') return '<span class="tag bj">BJ</span>';
+  if(w==='BW') return '<span class="tag bw">BW</span>';
+  if(w==='Both') return '<span class="tag both">Both</span>';
+  return `<span class="tag trade">${w}</span>`;
+}
+function priTag(p) {
+  if(p==='MUST') return '<span class="tag must">Must</span>';
+  if(p==='SHOULD') return '<span class="tag should">Should</span>';
+  return '<span class="tag nice">Nice</span>';
+}
+
+// Cross-section filters that show all sections grouped
+const CROSS_FILTERS = ['BJ','BW','due-today','must','done'];
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function setFilter(f) {
+  filter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('chip-'+f)?.classList.add('active');
+  // For cross-section filters, show the "all" page; otherwise show current tab
+  if(CROSS_FILTERS.includes(f)) {
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-all').classList.add('active');
+    tab='all';
+  } else {
+    // Reactivate the indoor tab if coming back from cross filter
+    if(tab==='all') {
+      tab='indoor';
+      document.getElementById('tab-indoor').classList.add('active');
+    }
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+tab).classList.add('active');
+    document.getElementById('tab-'+tab)?.classList.add('active');
+  }
+  renderAll();
+}
+
+function match(t) {
+  if(filter==='must') return t.p==='MUST'&&!t.done;
+  if(filter==='BJ') return (t.w==='BJ'||t.w==='Both')&&!t.done;
+  if(filter==='BW') return (t.w==='BW'||t.w==='Both')&&!t.done;
+  if(filter==='done') return t.done;
+  if(filter==='due-today') return !t.done && t.due===todayStr();
+  return true;
+}
+
+function pct(a,b){return b?Math.round(a/b*100):0;}
+function setEl(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function setW(id,w){const e=document.getElementById(id);if(e)e.style.width=w+'%';}
+
+function updateStats() {
+  const total=tasks.length, done=tasks.filter(t=>t.done).length;
+  const dl=Math.max(0,Math.ceil((new Date('2026-04-05')-new Date())/86400000));
+  setEl('headerSub',`${done} of ${total} done · ${dl} days to go`);
+
+  // Dashboard cards
+  setEl('dc-total',total);
+  setEl('dc-must',tasks.filter(t=>t.p==='MUST'&&!t.done).length);
+  setEl('dc-done',done);
+  setEl('dc-bj-rem',tasks.filter(t=>(t.w==='BJ'||t.w==='Both')&&!t.done).length);
+  setEl('dc-bw-rem',tasks.filter(t=>(t.w==='BW'||t.w==='Both')&&!t.done).length);
+  const tod=todayStr();
+  const todCount=tasks.filter(t=>!t.done&&t.due===tod).length;
+  setEl('dc-due-today',todCount);
+
+  // Chips
+  setEl('cn-all',total);
+  setEl('cn-must',tasks.filter(t=>t.p==='MUST'&&!t.done).length);
+  setEl('cn-BJ',tasks.filter(t=>(t.w==='BJ'||t.w==='Both')&&!t.done).length);
+  setEl('cn-BW',tasks.filter(t=>(t.w==='BW'||t.w==='Both')&&!t.done).length);
+  setEl('cn-due-today',todCount);
+  setEl('cn-done',done);
+
+  // Progress bars
+  const p = n => pct(tasks.filter(t=>t.done&&t.s===n).length, tasks.filter(t=>t.s===n).length);
+  const indoorTasks = tasks.filter(t=>t.s==='Indoor');
+  const outdoorTasks = tasks.filter(t=>t.s==='Outdoor');
+  const bjTasks = tasks.filter(t=>t.w==='BJ'||t.w==='Both');
+  const bwTasks = tasks.filter(t=>t.w==='BW'||t.w==='Both');
+  const bjDone = tasks.filter(t=>(t.w==='BJ'||t.w==='Both')&&t.done).length;
+  const bwDone = tasks.filter(t=>(t.w==='BW'||t.w==='Both')&&t.done).length;
+
+  const overall=pct(done,total);
+  setW('pFill-overall',overall); setEl('pPct-overall',overall+'%');
+  const ind=pct(indoorTasks.filter(t=>t.done).length,indoorTasks.length);
+  setW('pFill-indoor',ind); setEl('pPct-indoor',ind+'%');
+  const out=pct(outdoorTasks.filter(t=>t.done).length,outdoorTasks.length);
+  setW('pFill-outdoor',out); setEl('pPct-outdoor',out+'%');
+  const bj=pct(bjDone,bjTasks.length);
+  setW('pFill-bj',bj); setEl('pPct-bj',bj+'%');
+  const bw=pct(bwDone,bwTasks.length);
+  setW('pFill-bw',bw); setEl('pPct-bw',bw+'%');
+}
+
+function switchTab(t) {
+  tab=t;
+  filter='all'; // switching tab resets to "all" filter
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('chip-all').classList.add('active');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+t).classList.add('active');
+  renderPage(t);
+}
+
+function toggleSort() {
+  sortByDue = !sortByDue;
+  const btn = document.getElementById('sortBtn');
+  btn.classList.toggle('active', sortByDue);
+  btn.title = sortByDue ? 'Sorted by due date (tap to reset)' : 'Sort by due date';
+  renderAll();
+}
+
+// Returns tasks sorted by due date if sortByDue, otherwise priority sort
+function sortTasks(arr) {
+  return [...arr].sort((a,b) => {
+    if(a.done !== b.done) return a.done ? 1 : -1;
+    if(sortByDue) {
+      const da = a.due||'9999', db = b.due||'9999';
+      if(da !== db) return da < db ? -1 : 1;
+    }
+    return {MUST:0,SHOULD:1,NICE:2}[a.p] - {MUST:0,SHOULD:1,NICE:2}[b.p];
+  });
+}
+
+function renderAll() {
+  updateStats();
+  if(CROSS_FILTERS.includes(filter)) {
+    renderCrossSection();
+  } else {
+    ['indoor','outdoor','meal'].forEach(renderPage);
+  }
+}
+
+// Renders all sections grouped by Indoor / Outdoor / Meal Prep for cross-filters
+function renderCrossSection() {
+  const container = document.getElementById('page-all');
+  const secs = ['Indoor','Outdoor','Meal Prep'];
+  const secTab = {Indoor:'indoor',Outdoor:'outdoor','Meal Prep':'meal'};
+  const secIcon = {Indoor:'🏠 Indoor',Outdoor:'🌿 Outdoor','Meal Prep':'🍽️ Dinner'};
+  let anyContent = false;
+  let html = '';
+
+  secs.forEach(sec => {
+    const visible = tasks.filter(x=>x.s===sec&&match(x));
+    if(!visible.length) return;
+    anyContent = true;
+
+    html += `<div class="sec-label">${secIcon[sec]}</div>`;
+
+    const areas={};
+    visible.forEach(x=>{if(!areas[x.a])areas[x.a]=[];areas[x.a].push(x);});
+
+    Object.entries(areas).forEach(([area,at])=>{
+      const key=sec+'_'+area;
+      const open=!col[key];
+      const done=at.filter(x=>x.done).length;
+      const sorted=sortTasks(at);
+
+      html+=`<div class="sec"><div class="sec-group">
+        <div class="area-hdr" onclick="toggleCol('${key}')">
+          <div class="area-hdr-name">${area}</div>
+          <div class="area-hdr-right"><span>${done}/${at.length}</span><span class="chevron ${open?'open':''}">›</span></div>
+        </div>`;
+
+      if(open) sorted.forEach(t=>{
+        const note = t.note||t.notes||'';
+        const showDue = !t.done && t.due && (t.due!==DEFAULT_DUE || sortByDue);
+        html+=`<div class="task-row ${t.done?'done':''}" id="tr-${t.id}">
+          <div class="chk ${t.done?'on':''}" onclick="tick(${t.id})"></div>
+          <div class="task-body">
+            <div class="task-name">${t.n}</div>
+            <div class="task-meta">
+              ${priTag(t.p)}${whoTag(t.w)}
+              ${t.done&&t.doneDate?`<span class="tag donedate">✓ ${fmtDone(t.doneDate)}</span>`:''}
+              ${showDue?`<span class="tag datedue">by ${fmtD(t.due)}</span>`:''}
+            </div>
+            ${note?`<div class="task-note">${note}</div>`:''}
+          </div>
+          <button class="edit-btn" onclick="openEdit(${t.id})">›</button>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    });
+  });
+
+  if(!anyContent) html='<div class="empty">Nothing here ✓</div>';
+  container.innerHTML=html;
+}
+
+function renderPage(t) {
+  updateStats();
+  const sec = t==='indoor'?'Indoor':t==='outdoor'?'Outdoor':'Meal Prep';
+  const pid = 'page-'+t;
+  const container = document.getElementById(pid);
+  const visible = tasks.filter(x=>x.s===sec&&match(x));
+  if(!visible.length){container.innerHTML='<div class="empty">Nothing here ✓</div>';return;}
+
+  const areas={};
+  visible.forEach(x=>{if(!areas[x.a])areas[x.a]=[];areas[x.a].push(x);});
+
+  let html=`<div class="add-row"><button class="add-btn" onclick="openAdd('${sec}')">＋ Add</button></div>`;
+
+  Object.entries(areas).forEach(([area,at])=>{
+    const key=sec+'_'+area;
+    const open=!col[key];
+    const done=at.filter(x=>x.done).length;
+    const sorted=sortTasks(at);
+
+    html+=`<div class="sec"><div class="sec-group">
+      <div class="area-hdr" onclick="toggleCol('${key}')">
+        <div class="area-hdr-name">${area}</div>
+        <div class="area-hdr-right"><span>${done}/${at.length}</span><span class="chevron ${open?'open':''}">›</span></div>
+      </div>`;
+
+    if(open) sorted.forEach(t=>{
+      const note = t.note||t.notes||'';
+      const showDue = !t.done && t.due && (t.due!==DEFAULT_DUE || sortByDue);
+      html+=`<div class="task-row ${t.done?'done':''}" id="tr-${t.id}">
+        <div class="chk ${t.done?'on':''}" onclick="tick(${t.id})"></div>
+        <div class="task-body">
+          <div class="task-name">${t.n}</div>
+          <div class="task-meta">
+            ${priTag(t.p)}${whoTag(t.w)}
+            ${t.done&&t.doneDate?`<span class="tag donedate">✓ ${fmtDone(t.doneDate)}</span>`:''}
+            ${showDue?`<span class="tag datedue">by ${fmtD(t.due)}</span>`:''}
+          </div>
+          ${note?`<div class="task-note">${note}</div>`:''}
+        </div>
+        <button class="edit-btn" onclick="openEdit(${t.id})">›</button>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  container.innerHTML=html;
+}
+
+function toggleCol(key) { col[key]=!col[key]; persist(); renderAll(); }
+
+function tick(id) {
+  const t=tasks.find(x=>x.id===id);
+  if(!t) return;
+  t.done=!t.done;
+  t.doneDate=t.done?new Date().toISOString():null;
+  persist(); renderAll();
+}
+
+function allAreas() { return [...new Set(tasks.map(t=>t.a))].sort(); }
+
+function openAdd(sec) {
+  editId=null;
+  document.getElementById('modalT').textContent='New Task';
+  document.getElementById('btnDel').classList.add('hidden');
+  document.getElementById('fName').value='';
+  document.getElementById('fPriority').value='SHOULD';
+  document.getElementById('fWho').value='Both';
+  document.getElementById('fDue').value=DEFAULT_DUE;
+  document.getElementById('fNotes').value='';
+  document.getElementById('fSection').value=sec||'Indoor';
+  const sel=document.getElementById('fArea');
+  sel.innerHTML=allAreas().map(a=>`<option>${a}</option>`).join('')+'<option value="__new__">+ New area…</option>';
+  document.getElementById('overlay').classList.add('open');
+}
+function openEdit(id) {
+  editId=id;
+  const t=tasks.find(x=>x.id===id);
+  document.getElementById('modalT').textContent='Edit Task';
+  document.getElementById('btnDel').classList.remove('hidden');
+  document.getElementById('fName').value=t.n;
+  document.getElementById('fPriority').value=t.p;
+  document.getElementById('fWho').value=t.w;
+  document.getElementById('fDue').value=t.due||DEFAULT_DUE;
+  document.getElementById('fNotes').value=t.note||t.notes||'';
+  document.getElementById('fSection').value=t.s;
+  const sel=document.getElementById('fArea');
+  sel.innerHTML=allAreas().map(a=>`<option ${a===t.a?'selected':''}>${a}</option>`).join('')+'<option value="__new__">+ New area…</option>';
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function overlayClick(e) { if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function saveTask() {
+  const name=document.getElementById('fName').value.trim();
+  if(!name) return;
+  let area=document.getElementById('fArea').value;
+  if(area==='__new__') area=prompt('New area name:')||'General';
+  if(editId) {
+    const t=tasks.find(x=>x.id===editId);
+    t.n=name; t.a=area; t.s=document.getElementById('fSection').value;
+    t.p=document.getElementById('fPriority').value; t.w=document.getElementById('fWho').value;
+    t.due=document.getElementById('fDue').value||DEFAULT_DUE;
+    t.note=document.getElementById('fNotes').value;
+  } else {
+    tasks.push({id:nextId++,done:false,doneDate:null,n:name,a:area,
+      s:document.getElementById('fSection').value,p:document.getElementById('fPriority').value,
+      w:document.getElementById('fWho').value,due:document.getElementById('fDue').value||DEFAULT_DUE,
+      notes:'',note:document.getElementById('fNotes').value});
+  }
+  persist(); closeModal(); renderAll();
+}
+function deleteTask() {
+  if(!editId||!confirm('Delete this task?')) return;
+  tasks=tasks.filter(x=>x.id!==editId);
+  persist(); closeModal(); renderAll();
+}
+
+load().then(()=>renderAll());
+</script>
+</body>
+</html>

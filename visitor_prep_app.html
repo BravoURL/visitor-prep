@@ -31,11 +31,18 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 .header-title { font-size:26px; font-weight:700; letter-spacing:-0.4px; }
 .header-sub { font-size:13px; color:var(--text3); margin-top:2px; margin-bottom:12px; }
 
-/* DASHBOARD CARDS */
-.dash-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-.dash-card { background:var(--card); border-radius:10px; padding:10px 12px; text-align:center; }
-.dash-card-num { font-size:22px; font-weight:700; letter-spacing:-0.5px; line-height:1; }
-.dash-card-label { font-size:11px; color:var(--text3); margin-top:3px; font-weight:500; }
+/* MAIN NAV */
+.main-nav { display:flex; gap:4px; padding:0 16px 12px; }
+.main-nav-btn { flex:1; padding:9px 8px; border:none; background:var(--card); font-family:inherit; font-size:14px; font-weight:500; color:var(--text3); cursor:pointer; border-radius:10px; transition:all 0.15s; }
+.main-nav-btn.active { background:var(--blue); color:white; font-weight:600; }
+
+/* DASHBOARD PAGE */
+.dash-page { padding:0 16px 80px; }
+.dash-section-title { font-size:12px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; padding:16px 4px 8px; }
+.dash-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:4px; }
+.dash-card { background:var(--card); border-radius:12px; padding:14px 10px; text-align:center; }
+.dash-card-num { font-size:26px; font-weight:700; letter-spacing:-0.5px; line-height:1; }
+.dash-card-label { font-size:11px; color:var(--text3); margin-top:4px; font-weight:500; }
 .dash-card-num.blue { color:var(--blue); }
 .dash-card-num.red { color:var(--red); }
 .dash-card-num.purple { color:var(--purple); }
@@ -43,13 +50,31 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 .dash-card-num.green { color:var(--green); }
 .dash-card-num.orange { color:var(--orange); }
 
-/* PROGRESS BARS */
-.prog-block { margin-bottom:14px; display:flex; flex-direction:column; gap:7px; }
+/* PROGRESS RINGS */
+.rings-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:4px; }
+.ring-card { background:var(--card); border-radius:12px; padding:14px 10px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.ring-wrap { position:relative; width:64px; height:64px; }
+.ring-svg { transform:rotate(-90deg); }
+.ring-bg { fill:none; stroke:rgba(0,0,0,0.06); stroke-width:6; }
+.ring-fg { fill:none; stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset 0.6s ease; }
+.ring-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+.ring-label { font-size:11px; font-weight:600; color:var(--text3); text-align:center; }
+
+/* PROGRESS BARS (keep for compatibility) */
+.prog-block { display:none; }
 .prog-row { display:flex; align-items:center; gap:8px; }
 .prog-label { font-size:12px; color:var(--text3); width:72px; flex-shrink:0; font-weight:500; }
 .prog-track { flex:1; height:4px; background:rgba(0,0,0,0.06); border-radius:2px; overflow:hidden; }
 .prog-fill { height:100%; border-radius:2px; transition:width 0.4s; }
 .prog-pct { font-size:12px; font-weight:600; min-width:28px; text-align:right; }
+
+/* KEY DATES */
+.dates-list { background:var(--card); border-radius:12px; overflow:hidden; }
+.date-row { display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid var(--sep); }
+.date-row:last-child { border-bottom:none; }
+.date-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.date-name { font-size:14px; font-weight:600; flex:1; }
+.date-desc { font-size:12px; color:var(--text3); }
 
 /* CHIPS */
 .chips { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:0 20px 14px; }
@@ -139,6 +164,29 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 .sort-btn { width:36px; height:36px; border:none; background:var(--card); border-radius:10px; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .sort-btn.active { background:var(--blue); }
 
+
+/* CHAT BUTTON */
+.chat-fab { position:fixed; bottom:24px; right:20px; width:52px; height:52px; background:#1a1a1a; border-radius:50%; border:none; cursor:pointer; font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,0.35); z-index:100; transition:transform 0.15s; }
+.chat-fab:active { transform:scale(0.93); }
+
+/* CHAT PANEL */
+.chat-panel { display:none; position:fixed; inset:0; z-index:150; flex-direction:column; background:var(--bg); }
+.chat-panel.open { display:flex; }
+.chat-header { background:rgba(242,242,247,0.94); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding:14px 16px 12px; border-bottom:1px solid var(--sep); display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.chat-header-title { flex:1; font-size:17px; font-weight:700; }
+.chat-close { width:32px; height:32px; border:none; background:var(--bg); border-radius:50%; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text3); }
+.chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.chat-msg { max-width:85%; padding:10px 14px; border-radius:16px; font-size:14px; line-height:1.5; }
+.chat-msg.user { background:var(--blue); color:white; align-self:flex-end; border-bottom-right-radius:4px; }
+.chat-msg.assistant { background:var(--card); color:var(--text); align-self:flex-start; border-bottom-left-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.chat-msg.thinking { background:var(--card); color:var(--text3); align-self:flex-start; font-style:italic; }
+.chat-suggestions { display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 10px; flex-shrink:0; }
+.chat-suggestion { background:var(--card); border:1.5px solid var(--border); border-radius:20px; padding:6px 13px; font-size:13px; font-weight:500; color:var(--blue); cursor:pointer; white-space:nowrap; }
+.chat-suggestion:active { background:var(--blue-light); }
+.chat-input-row { display:flex; gap:8px; padding:10px 16px 20px; flex-shrink:0; background:rgba(242,242,247,0.94); border-top:1px solid var(--sep); }
+.chat-input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:22px; font-family:inherit; font-size:15px; outline:none; background:var(--card); }
+.chat-send { width:40px; height:40px; background:var(--blue); border:none; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.chat-send:disabled { opacity:0.4; }
 @media(min-width:560px){.modal{border-radius:20px;margin-bottom:40px;}.overlay{align-items:center;}}
 </style>
 </head>
@@ -147,70 +195,37 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 <div class="header">
   <div class="header-inner">
     <div class="header-title">4 April — Visitor Prep</div>
-    <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="header-sub" id="headerSub">Loading…</div><div id="syncStatus" style="font-size:11px;color:var(--text3);font-weight:500;padding-bottom:12px"></div></div>
-
-    <!-- Dashboard cards -->
-    <div class="dash-cards">
-      <div class="dash-card"><div class="dash-card-num blue" id="dc-total">—</div><div class="dash-card-label">Total</div></div>
-      <div class="dash-card"><div class="dash-card-num red" id="dc-must">—</div><div class="dash-card-label">Must Do</div></div>
-      <div class="dash-card"><div class="dash-card-num green" id="dc-done">—</div><div class="dash-card-label">Done</div></div>
-      <div class="dash-card"><div class="dash-card-num purple" id="dc-bj-rem">—</div><div class="dash-card-label">BJ Remaining</div></div>
-      <div class="dash-card"><div class="dash-card-num teal" id="dc-bw-rem">—</div><div class="dash-card-label">BW Remaining</div></div>
-      <div class="dash-card"><div class="dash-card-num orange" id="dc-due-today">—</div><div class="dash-card-label">Due Today</div></div>
-    </div>
-
-    <!-- Progress bars -->
-    <div class="prog-block">
-      <div class="prog-row">
-        <div class="prog-label">Overall</div>
-        <div class="prog-track"><div class="prog-fill" id="pFill-overall" style="width:0%;background:var(--blue)"></div></div>
-        <div class="prog-pct" id="pPct-overall" style="color:var(--blue)">0%</div>
-      </div>
-      <div class="prog-row">
-        <div class="prog-label">Indoor</div>
-        <div class="prog-track"><div class="prog-fill" id="pFill-indoor" style="width:0%;background:var(--purple)"></div></div>
-        <div class="prog-pct" id="pPct-indoor" style="color:var(--purple)">0%</div>
-      </div>
-      <div class="prog-row">
-        <div class="prog-label">Outdoor</div>
-        <div class="prog-track"><div class="prog-fill" id="pFill-outdoor" style="width:0%;background:var(--green)"></div></div>
-        <div class="prog-pct" id="pPct-outdoor" style="color:var(--green)">0%</div>
-      </div>
-      <div class="prog-row">
-        <div class="prog-label">💜 BJ</div>
-        <div class="prog-track"><div class="prog-fill" id="pFill-bj" style="width:0%;background:var(--purple)"></div></div>
-        <div class="prog-pct" id="pPct-bj" style="color:var(--purple)">0%</div>
-      </div>
-      <div class="prog-row">
-        <div class="prog-label">💙 BW</div>
-        <div class="prog-track"><div class="prog-fill" id="pFill-bw" style="width:0%;background:#0071e3"></div></div>
-        <div class="prog-pct" id="pPct-bw" style="color:#0071e3">0%</div>
-      </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div class="header-sub" id="headerSub">Loading…</div>
+      <div id="syncStatus" style="font-size:11px;color:var(--text3);font-weight:500"></div>
     </div>
   </div>
-
-  <!-- Filter chips -->
-  <div class="chips">
-    <div class="chip active" onclick="setFilter('all')" id="chip-all">All <span class="chip-num" id="cn-all">—</span></div>
-    <div class="chip" onclick="setFilter('must')" id="chip-must">🔴 Must <span class="chip-num" id="cn-must">—</span></div>
-    <div class="chip" onclick="setFilter('BJ')" id="chip-BJ">💜 BJ <span class="chip-num" id="cn-BJ">—</span></div>
-    <div class="chip" onclick="setFilter('BW')" id="chip-BW">💙 BW <span class="chip-num" id="cn-BW">—</span></div>
-    <div class="chip" onclick="setFilter('due-today')" id="chip-due-today">📅 Due Today <span class="chip-num" id="cn-due-today">—</span></div>
-    <div class="chip" onclick="setFilter('done')" id="chip-done">✓ Done <span class="chip-num" id="cn-done">—</span></div>
+  <div class="main-nav">
+    <button class="main-nav-btn" onclick="switchMainTab('dashboard')" id="mnav-dashboard">📊 Dashboard</button>
+    <button class="main-nav-btn active" onclick="switchMainTab('tasks')" id="mnav-tasks">✅ Tasks</button>
   </div>
-
-  <!-- Sort + Tabs row -->
-  <div style="display:flex;gap:4px;padding:0 16px 12px;align-items:center;">
-    <div class="tabs" style="flex:1;padding:0;margin:0;">
-      <button class="tab active" onclick="switchTab('indoor')" id="tab-indoor">🏠 Indoor</button>
-      <button class="tab" onclick="switchTab('outdoor')" id="tab-outdoor">🌿 Outdoor</button>
-      <button class="tab" onclick="switchTab('meal')" id="tab-meal">🍽️ Dinner</button>
+  <div id="taskControls">
+    <div class="chips">
+      <div class="chip active" onclick="setFilter('all')" id="chip-all">All <span class="chip-num" id="cn-all">—</span></div>
+      <div class="chip" onclick="setFilter('must')" id="chip-must">🔴 Must <span class="chip-num" id="cn-must">—</span></div>
+      <div class="chip" onclick="setFilter('BJ')" id="chip-BJ">💜 BJ <span class="chip-num" id="cn-BJ">—</span></div>
+      <div class="chip" onclick="setFilter('BW')" id="chip-BW">💙 BW <span class="chip-num" id="cn-BW">—</span></div>
+      <div class="chip" onclick="setFilter('due-today')" id="chip-due-today">📅 Due Today <span class="chip-num" id="cn-due-today">—</span></div>
+      <div class="chip" onclick="setFilter('done')" id="chip-done">✓ Done <span class="chip-num" id="cn-done">—</span></div>
     </div>
-    <button class="sort-btn" id="sortBtn" onclick="toggleSort()" title="Sort by due date">📅</button>
+    <div style="display:flex;gap:4px;padding:0 16px 12px;align-items:center;">
+      <div class="tabs" style="flex:1;padding:0;margin:0;">
+        <button class="tab active" onclick="switchTab('indoor')" id="tab-indoor">🏠 Indoor</button>
+        <button class="tab" onclick="switchTab('outdoor')" id="tab-outdoor">🌿 Outdoor</button>
+        <button class="tab" onclick="switchTab('meal')" id="tab-meal">🍽️ Dinner</button>
+      </div>
+      <button class="sort-btn" id="sortBtn" onclick="toggleSort()" title="Sort by due date">📅</button>
+    </div>
   </div>
 </div>
 
-<div class="main">
+<div id="dashboardView" class="dash-page" style="display:none"></div>
+<div class="main" id="tasksView">
   <div class="page" id="page-all"></div>
   <div class="page active" id="page-indoor"></div>
   <div class="page" id="page-outdoor"></div>
@@ -811,7 +826,320 @@ function deleteTask() {
   persist(); closeModal(); renderAll();
 }
 
+
+// ── CHAT ─────────────────────────────────────────────────────────────────────
+const CLAUDE_KEY = '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';
+let chatHistory = [];
+
+function openChat() {
+  document.getElementById('chatPanel').classList.add('open');
+}
+function closeChat() { document.getElementById('chatPanel').classList.remove('open'); }
+
+function askSuggestion(el) {
+  document.getElementById('chatInput').value = el.textContent;
+  sendChat();
+}
+
+function buildContext() {
+  const now = new Date();
+  const todayStr = now.toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const daysLeft = Math.max(0, Math.ceil((new Date('2026-04-05') - now) / 86400000));
+
+  const total = tasks.length;
+  const done = tasks.filter(t=>t.done).length;
+  const mustUndone = tasks.filter(t=>t.p==='MUST'&&!t.done);
+  const bjUndone = tasks.filter(t=>(t.w==='BJ'||t.w==='Both')&&!t.done);
+  const bwUndone = tasks.filter(t=>(t.w==='BW'||t.w==='Both')&&!t.done);
+
+  const fmt = arr => arr.slice(0,20).map(t=>`- [${t.p}] ${t.n} (${t.w}, ${t.s}, due ${t.due})`).join('\n');
+
+  return `You are a helpful home project assistant. You have full knowledge of Brent and Bernadette's visitor preparation task list.
+
+TODAY: ${todayStr}
+DAYS UNTIL GUESTS ARRIVE (5 April 2026): ${daysLeft}
+
+KEY DATES:
+- Fri 27 Mar: Public Holiday — biggest indoor work day
+- Sat 28 Mar: Big outdoor/garden push day  
+- Sun 29 Mar: Continuation day
+- Brent away (travel): 25, 26, 27 Mar AND 31 Mar, 1, 2 Apr (remote tasks only on these days)
+- Sat 4 Apr: Final prettying up — mow, blow, whippersnip, edge, mop porches
+- Sun 5 Apr: GUESTS ARRIVE for dinner
+
+PROGRESS: ${done} of ${total} tasks done (${Math.round(done/total*100)}%)
+MUST DO remaining: ${mustUndone.length}
+Bernadette (BJ) tasks remaining: ${bjUndone.length}
+Brent (BW) tasks remaining: ${bwUndone.length}
+
+MUST DO TASKS REMAINING:
+${fmt(mustUndone)}
+
+BERNADETTE'S REMAINING TASKS (sample):
+${fmt(bjUndone.slice(0,15))}
+
+BRENT'S REMAINING TASKS (sample):
+${fmt(bwUndone.slice(0,15))}
+
+ALL TASKS OVERVIEW (${total} total, ${done} done):
+Indoor: ${tasks.filter(t=>t.s==='Indoor'&&!t.done).length} remaining
+Outdoor: ${tasks.filter(t=>t.s==='Outdoor'&&!t.done).length} remaining
+Dinner Prep: ${tasks.filter(t=>t.s==='Meal Prep'&&!t.done).length} remaining
+
+Give practical, specific, prioritised advice. Be concise and direct. Use dot points where helpful. Consider the current day, who is available, and days remaining.`;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  document.getElementById('chatSendBtn').disabled = true;
+  document.getElementById('chatSuggestions').style.display = 'none';
+
+  // Add user message
+  addChatMsg(msg, 'user');
+  chatHistory.push({ role: 'user', content: msg });
+
+  // Thinking indicator
+  const thinkId = 'think_' + Date.now();
+  addChatMsg('', 'thinking', thinkId);
+  document.getElementById(thinkId).innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg viewBox="0 0 40 40" width="24" height="24" xmlns=\'http://www.w3.org/2000/svg\' style=\'flex-shrink:0\'><style>@keyframes flap{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-30deg)}75%{transform:rotate(6deg)}}#fw{transform-origin:14px 22px;animation:flap 0.3s ease-in-out infinite}</style><ellipse cx="20" cy="26" rx="10" ry="8" fill="#2a2a2a"/><path id="fw" d="M16 22 Q11 20 10 26 Q13 24 16 28 Q13 28 11 31 Q16 29 19 30Z" fill="#1a1a1a"/><ellipse cx="23" cy="16" rx="7" ry="6" fill="#2a2a2a"/><circle cx="26" cy="14" r="3" fill="#e8a020"/><circle cx="26" cy="14" r="1.6" fill="#1a1a1a"/><path d="M29 15 Q34 14 33 17 Q31 16 29 17Z" fill="#e8a020"/></svg><em>Blackbird is thinking…</em></span>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-client-side-allow-unsafe': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1000,
+        system: buildContext(),
+        messages: chatHistory
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Sorry, something went wrong.';
+
+    // Remove thinking, add reply
+    document.getElementById(thinkId)?.remove();
+    document.getElementById('bbwing')?.classList.remove('flapping');
+    addChatMsg(reply, 'assistant');
+    chatHistory.push({ role: 'assistant', content: reply });
+
+  } catch(e) {
+    document.getElementById(thinkId)?.remove();
+    document.getElementById('bbwing')?.classList.remove('flapping');
+    addChatMsg('Sorry, could not reach Claude. Check your connection.', 'thinking');
+  }
+
+  document.getElementById('chatSendBtn').disabled = false;
+  scrollChat();
+}
+
+function addChatMsg(text, type, id) {
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + type;
+  if (id) el.id = id;
+  // Convert markdown-ish bullet points
+  el.innerHTML = text.replace(/\n/g, '<br>').replace(/- /g, '• ');
+  document.getElementById('chatMessages').appendChild(el);
+  scrollChat();
+}
+
+function scrollChat() {
+  const m = document.getElementById('chatMessages');
+  m.scrollTop = m.scrollHeight;
+}
+
+
+// ── MAIN TAB SWITCHING ────────────────────────────────────────────────────────
+let mainTab = 'tasks';
+
+function switchMainTab(t) {
+  mainTab = t;
+  document.querySelectorAll('.main-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mnav-' + t).classList.add('active');
+  if (t === 'dashboard') {
+    document.getElementById('dashboardView').style.display = 'block';
+    document.getElementById('tasksView').style.display = 'none';
+    document.getElementById('taskControls').style.display = 'none';
+    renderDashboard();
+  } else {
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('tasksView').style.display = 'block';
+    document.getElementById('taskControls').style.display = 'block';
+    renderAll();
+  }
+}
+
+function ring(pct, colour) {
+  const r = 26, circ = 2 * Math.PI * r;
+  const offset = circ - (pct / 100) * circ;
+  return `<div class="ring-wrap">
+    <svg class="ring-svg" width="64" height="64" viewBox="0 0 64 64">
+      <circle class="ring-bg" cx="32" cy="32" r="${r}"/>
+      <circle class="ring-fg" cx="32" cy="32" r="${r}" stroke="${colour}"
+        stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+    </svg>
+    <div class="ring-pct" style="color:${colour}">${pct}%</div>
+  </div>`;
+}
+
+function renderDashboard() {
+  const total = tasks.length;
+  const done = tasks.filter(t => t.done).length;
+  const mustAll = tasks.filter(t => t.p === 'MUST');
+  const mustDone = mustAll.filter(t => t.done).length;
+  const indoor = tasks.filter(t => t.s === 'Indoor');
+  const outdoor = tasks.filter(t => t.s === 'Outdoor');
+  const meal = tasks.filter(t => t.s === 'Meal Prep');
+  const bjAll = tasks.filter(t => t.w === 'BJ' || t.w === 'Both');
+  const bwAll = tasks.filter(t => t.w === 'BW' || t.w === 'Both');
+  const p = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const tod = todayStr();
+  const daysLeft = Math.max(0, Math.ceil((new Date('2026-04-05') - new Date()) / 86400000));
+
+  const container = document.getElementById('dashboardView');
+  container.innerHTML = `
+    <div class="dash-section-title">Overview</div>
+    <div class="dash-cards">
+      <div class="dash-card"><div class="dash-card-num blue">${total}</div><div class="dash-card-label">Total Tasks</div></div>
+      <div class="dash-card"><div class="dash-card-num green">${done}</div><div class="dash-card-label">Done ✓</div></div>
+      <div class="dash-card"><div class="dash-card-num red">${mustAll.length - mustDone}</div><div class="dash-card-label">Must Remaining</div></div>
+      <div class="dash-card"><div class="dash-card-num orange">${tasks.filter(t => !t.done && t.due === tod).length}</div><div class="dash-card-label">Due Today</div></div>
+      <div class="dash-card"><div class="dash-card-num purple">${bjAll.filter(t=>!t.done).length}</div><div class="dash-card-label">BJ Left</div></div>
+      <div class="dash-card"><div class="dash-card-num teal">${bwAll.filter(t=>!t.done).length}</div><div class="dash-card-label">BW Left</div></div>
+    </div>
+
+    <div class="dash-section-title">Progress</div>
+    <div class="rings-row">
+      <div class="ring-card">${ring(p(done,total),'#007aff')}<div class="ring-label">Overall</div></div>
+      <div class="ring-card">${ring(p(mustDone,mustAll.length),'#ff3b30')}<div class="ring-label">Must Do</div></div>
+      <div class="ring-card">${ring(p(indoor.filter(t=>t.done).length,indoor.length),'#af52de')}<div class="ring-label">Indoor</div></div>
+      <div class="ring-card">${ring(p(outdoor.filter(t=>t.done).length,outdoor.length),'#34c759')}<div class="ring-label">Outdoor</div></div>
+      <div class="ring-card">${ring(p(bjAll.filter(t=>t.done).length,bjAll.length),'#af52de')}<div class="ring-label">💜 BJ</div></div>
+      <div class="ring-card">${ring(p(bwAll.filter(t=>t.done).length,bwAll.length),'#0071e3')}<div class="ring-label">💙 BW</div></div>
+    </div>
+
+    <div class="dash-section-title">Key Dates</div>
+    <div class="dates-list">
+      <div class="date-row"><div class="date-dot" style="background:#ff9500"></div><div class="date-name">Fri 27 Mar</div><div class="date-desc">Public Holiday — biggest work day</div></div>
+      <div class="date-row"><div class="date-dot" style="background:#ff3b30"></div><div class="date-name">Sat 28 Mar</div><div class="date-desc">Big outdoor push</div></div>
+      <div class="date-row"><div class="date-dot" style="background:#0071e3"></div><div class="date-name">25–27 Mar & 31 Mar–2 Apr</div><div class="date-desc">BW travelling — remote tasks only</div></div>
+      <div class="date-row"><div class="date-dot" style="background:#af52de"></div><div class="date-name">Sat 4 Apr</div><div class="date-desc">Final finish — mow, blow, edge, mop</div></div>
+      <div class="date-row"><div class="date-dot" style="background:#34c759"></div><div class="date-name">Sun 5 Apr 🎉</div><div class="date-desc">Guests arrive for dinner — ${daysLeft} days away</div></div>
+    </div>
+
+    <div class="dash-section-title">Must Do — Still Pending</div>
+    <div class="sec-group" style="border-radius:12px;overflow:hidden;background:white">
+      ${tasks.filter(t=>t.p==='MUST'&&!t.done).slice(0,10).map(t=>`
+        <div class="task-row" style="padding-left:16px">
+          <div class="task-body">
+            <div class="task-name">${t.n}</div>
+            <div class="task-meta">${whoTag(t.w)}<span class="tag ${t.s==='Indoor'?'bj':'nice'}" style="font-size:10px">${t.s}</span></div>
+          </div>
+        </div>`).join('')}
+      ${tasks.filter(t=>t.p==='MUST'&&!t.done).length > 10 ? `<div style="padding:10px 16px;font-size:13px;color:var(--text3)">+${tasks.filter(t=>t.p==='MUST'&&!t.done).length-10} more — see Tasks tab</div>` : ''}
+    </div>
+  `;
+}
+
 load().then(()=>renderAll());
 </script>
+
+<!-- CHAT FAB -->
+<button class="chat-fab" onclick="openChat()" id="chatFab" title="Ask Blackbird" style="background:#fafaf7;padding:0;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.18)">
+  <svg viewBox="0 0 52 52" width="52" height="52" xmlns="http://www.w3.org/2000/svg">
+    <defs><style>
+      @keyframes bb-hop{0%,100%{transform:translateY(0px)}45%{transform:translateY(-4px)}75%{transform:translateY(-1.5px)}}
+      @keyframes bb-nod{0%,100%{transform:rotate(0deg)}38%{transform:rotate(-7deg)}70%{transform:rotate(3deg)}}
+      @keyframes bb-wing-idle{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-2deg)}}
+      @keyframes bb-wing-flap{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-30deg)}75%{transform:rotate(6deg)}}
+      #bbg{transform-origin:26px 30px;animation:bb-hop 2s ease-in-out infinite}
+      #bbh{transform-origin:19px 18px;animation:bb-nod 2.8s ease-in-out infinite 0.5s}
+      #bbw{transform-origin:33px 26px;animation:bb-wing-idle 2.2s ease-in-out infinite}
+      #bbw.flapping{animation:bb-wing-flap 0.28s ease-in-out infinite}
+    </style></defs>
+    <g id="bbg">
+      <!-- tail: two clean geometric tapered bars -->
+      <rect x="34" y="31" width="12" height="3" rx="1.5" fill="#1a1a1a" transform="rotate(12 34 32)"/>
+      <rect x="34" y="35" width="10" height="2.5" rx="1.25" fill="#1a1a1a" transform="rotate(20 34 36)"/>
+      <!-- body: single clean ellipse -->
+      <ellipse cx="24" cy="30" rx="11" ry="8" fill="#1a1a1a"/>
+      <!-- wing: one smooth geometric shape on top of body -->
+      <g id="bbw">
+        <ellipse cx="30" cy="26" rx="7" ry="4" fill="#2a2a2a" transform="rotate(-15 30 26)"/>
+      </g>
+      <!-- head -->
+      <g id="bbh">
+        <circle cx="17" cy="18" r="8" fill="#1a1a1a"/>
+        <!-- eye: concentric circles — clean, confident -->
+        <circle cx="14" cy="16" r="3.8" fill="#f0a000"/>
+        <circle cx="14" cy="16" r="2.2" fill="#1a1a1a"/>
+        <circle cx="12.8" cy="14.8" r="0.8" fill="white"/>
+        <!-- beak: single clean triangle pointing left -->
+        <polygon points="10,16.5 3,18 10,19.5" fill="#f0a000"/>
+      </g>
+      <!-- legs: minimal, two clean lines -->
+      <line x1="22" y1="38" x2="20" y2="44" stroke="#c07800" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="27" y1="38" x2="26" y2="44" stroke="#c07800" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+  </svg>
+</button>
+
+<!-- CHAT PANEL -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <svg viewBox="0 0 36 36" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>
+          @keyframes ph-hop{0%,100%{transform:translateY(0)}45%{transform:translateY(-2.5px)}}
+          @keyframes ph-nod{0%,100%{transform:rotate(0deg)}40%{transform:rotate(-6deg)}70%{transform:rotate(3deg)}}
+          #phg{transform-origin:18px 22px;animation:ph-hop 2s ease-in-out infinite}
+          #phh{transform-origin:13px 13px;animation:ph-nod 2.8s ease-in-out infinite 0.5s}
+        </style></defs>
+        <g id="phg">
+          <rect x="24" y="21" width="9" height="2.5" rx="1.25" fill="#1a1a1a" transform="rotate(12 24 22)"/>
+          <rect x="24" y="24" width="7.5" height="2" rx="1" fill="#1a1a1a" transform="rotate(20 24 25)"/>
+          <ellipse cx="17" cy="22" rx="8" ry="6" fill="#1a1a1a"/>
+          <ellipse cx="22" cy="18" rx="5" ry="3" fill="#2a2a2a" transform="rotate(-15 22 18)"/>
+          <g id="phh">
+            <circle cx="13" cy="13" r="6" fill="#1a1a1a"/>
+            <circle cx="10.5" cy="11.5" r="2.8" fill="#f0a000"/>
+            <circle cx="10.5" cy="11.5" r="1.6" fill="#1a1a1a"/>
+            <circle cx="9.5" cy="10.5" r="0.6" fill="white"/>
+            <polygon points="8,12 3,13 8,14" fill="#f0a000"/>
+          </g>
+          <line x1="16" y1="27" x2="14" y2="32" stroke="#c07800" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="19" y1="27" x2="18" y2="32" stroke="#c07800" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div class="chat-header-title">Blackbird</div>
+    </div>
+    <button class="chat-close" onclick="closeChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg assistant">Hi, I'm Blackbird — I know your full task list, today's date, who's doing what, and all the key dates. Ask me anything — like <em>"what should I focus on right now?"</em> or <em>"what can Brent do while travelling?"</em></div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <div class="chat-suggestion" onclick="askSuggestion(this)">What should I focus on right now?</div>
+    <div class="chat-suggestion" onclick="askSuggestion(this)">What are the most urgent Must Do tasks?</div>
+    <div class="chat-suggestion" onclick="askSuggestion(this)">What can Brent do while travelling?</div>
+    <div class="chat-suggestion" onclick="askSuggestion(this)">What should we tackle this Saturday?</div>
+    <div class="chat-suggestion" onclick="askSuggestion(this)">How are we tracking overall?</div>
+    <div class="chat-suggestion" onclick="askSuggestion(this)">What's left for Bernadette this week?</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="Ask anything about the list…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" id="chatSendBtn" onclick="sendChat()">↑</button>
+  </div>
+</div>
 </body>
 </html>
